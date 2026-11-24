@@ -1,0 +1,56 @@
+{
+  "name": "@neuroseti/mcp",
+  "version": "0.5.0",
+  "description": "Official MCP server for Neuroseti.ru: 28 tools for Russia (33 LLMs in RUB, AI Telegram search, FNS INN, CBR FX/penalties/BIC, OKVED-2, ICD-10, 35k+ GRLS drugs, Roszdravnadzor, Rospatent, Chestny ZNAK / TN VED, SRO NOSTROY/NOPRIZ, RF real estate & IT salaries).",
+  "type": "module",
+  "license": "MIT",
+  "author": "Neuroseti.ru <vitaliyvino@gmail.com> (https://neuroseti.ru)",
+  "homepage": "https://neuroseti.ru/mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vitaliyvino/neuroseti-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vitaliyvino/neuroseti-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "russia",
+    "open-data",
+    "fns",
+    "cbr",
+    "okved",
+    "icd10",
+    "grls",
+    "rospatent",
+    "chestny-znak",
+    "nostroy",
+    "nopriz",
+    "llm",
+    "cursor",
+    "claude-code",
+    "neuroseti"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bin": {
+    "neuroseti-mcp": "./server.mjs"
+  },
+  "files": [
+    "server.mjs",
+    "server.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node server.mjs --http",
+    "start:stdio": "node server.mjs --stdio",
+    "test": "node --test test.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

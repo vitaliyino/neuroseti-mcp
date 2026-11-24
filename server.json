@@ -1,0 +1,45 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "name": "ru.neuroseti/mcp",
+  "title": "Neuroseti.ru MCP (RF Open Data + 33 LLMs)",
+  "description": "28 MCP tools for Russian developers and AI agents: 33 LLMs in RUB, AI Telegram search (43k+ posts), FNS INN, CBR FX/penalties/BIC, OKVED-2, ICD-10, 35k+ GRLS drugs, Roszdravnadzor, Rospatent, Chestny ZNAK/TN VED, SRO NOSTROY/NOPRIZ, RF mortgage & IT salary index.",
+  "version": "0.5.0",
+  "websiteUrl": "https://neuroseti.ru/mcp",
+  "repository": {
+    "url": "https://github.com/vitaliyvino/neuroseti-mcp",
+    "source": "github"
+  },
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.neuroseti.ru/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer nsr_... API key from https://neuroseti.ru/account (300 free requests/day)",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@neuroseti/mcp",
+      "version": "0.5.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "NEUROSETI_API_KEY",
+          "description": "API key nsr_... from https://neuroseti.ru/account (300 free requests/day)",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

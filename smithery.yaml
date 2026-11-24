@@ -1,0 +1,19 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - neurosetiApiKey
+    properties:
+      neurosetiApiKey:
+        type: string
+        description: "Free API key (nsr_..., 300 req/day) from https://neuroseti.ru/account"
+  commandFunction: |-
+    (config) => ({
+      command: "node",
+      args: ["server.mjs", "--stdio"],
+      env: {
+        NEUROSETI_API_KEY: config.neurosetiApiKey,
+        NEUROSETI_API_BASE: "https://api.neuroseti.ru/v1"
+      }
+    })

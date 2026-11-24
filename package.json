@@ -39,16 +39,27 @@
   "bin": {
     "neuroseti-mcp": "./server.mjs"
   },
+  "exports": {
+    ".": "./server.mjs",
+    "./sdk": {
+      "types": "./sdk/neuroseti-data.d.ts",
+      "import": "./sdk/neuroseti-data.mjs"
+    }
+  },
   "files": [
     "server.mjs",
     "server.json",
+    "sdk/neuroseti-data.mjs",
+    "sdk/neuroseti-data.d.ts",
+    "templates/n8n-rf-business-bot.json",
     "README.md",
+    "README.ru.md",
     "LICENSE"
   ],
   "scripts": {
     "start": "node server.mjs --http",
     "start:stdio": "node server.mjs --stdio",
-    "test": "node --test test.mjs"
+    "test": "node --test test.mjs sdk/test.mjs"
   },
   "publishConfig": {
     "access": "public"

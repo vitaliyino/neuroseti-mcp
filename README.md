@@ -48,7 +48,17 @@ claude mcp add --transport http neuroseti https://mcp.neuroseti.ru/mcp --header 
 }
 ```
 
-### 3. Python SDK (OpenAI Agents / LangChain / Scripts)
+### 3. JavaScript / TypeScript SDK (Zero dependencies)
+
+```js
+import { NeurosetiDataClient } from '@neuroseti/mcp/sdk';
+
+const client = new NeurosetiDataClient({ apiKey: 'nsr_YOUR_KEY' });
+console.log(await client.checkMarkirovka({ q: 'футболка' }));
+console.log(await client.checkContractor('5047176993'));
+```
+
+### 4. Python SDK (OpenAI Agents / LangChain / Scripts)
 
 ```bash
 pip install neuroseti-data

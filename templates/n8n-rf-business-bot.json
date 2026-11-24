@@ -1,0 +1,79 @@
+{
+  "name": "Neuroseti.ru Open Data RF Bot (Contractor INN + Chestny ZNAK + GRLS)",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "parameters": {
+        "path": "neuroseti-check",
+        "httpMethod": "POST",
+        "responseMode": "lastNode"
+      }
+    },
+    {
+      "id": "2",
+      "name": "Check Contractor INN (SRO + FNS + RNP)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 180],
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.neuroseti.ru/v1/data/construction/contractor/{{ $json.body.inn || '5047176993' }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.NEUROSETI_API_KEY }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "3",
+      "name": "Check Chestny ZNAK + TR TS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 360],
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.neuroseti.ru/v1/data/ecom/markirovka/check",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.body.product || 'футболка' }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.NEUROSETI_API_KEY }}"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          { "node": "Check Contractor INN (SRO + FNS + RNP)", "type": "main", "index": 0 },
+          { "node": "Check Chestny ZNAK + TR TS", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

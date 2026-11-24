@@ -44,3 +44,7 @@ python -m pip install --upgrade build twine
 python -m build
 python -m twine upload dist/*
 ```
+
+## Автопубликация по тегу `v*` (GitHub Actions)
+
+В `.github/workflows/publish.yml` настроен автовыпуск в npm и PyPI при пуше тега `v*` (например, `v0.7.0`). Достаточно добавить `NPM_TOKEN` и `PYPI_TOKEN` в `Settings -> Secrets and variables -> Actions` репозитория `vitaliyino/neuroseti-mcp`.

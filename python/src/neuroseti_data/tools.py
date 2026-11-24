@@ -23,6 +23,18 @@ OPENAI_TOOL_SCHEMAS: list[dict[str, Any]] = [
     {
         "type": "function",
         "function": {
+            "name": "ru_counterparty_360",
+            "description": "360-degree check of a Russian company or IE by INN across 8 official registries (FNS, SRO NOSTROY/NOPRIZ, FAS RNP, Roszdravnadzor, Rospatent, GIS ZKH UK, RU Software, EISZS).",
+            "parameters": {
+                "type": "object",
+                "required": ["inn"],
+                "properties": {"inn": {"type": "string", "description": "10- or 12-digit Russian INN"}},
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "ecom_markirovka_check",
             "description": "Check mandatory Russian Chestny ZNAK marking (waves 1-3) and TR TS certification by TN VED or product name.",
             "parameters": {
@@ -97,6 +109,8 @@ def dispatch_openai_tool_call(client: NeurosetiDataClient, name: str, arguments:
     args = json.loads(arguments) if isinstance(arguments, str) else dict(arguments or {})
     if name == "ru_company_by_inn":
         res = client.get_company_by_inn(args["inn"])
+    elif name == "ru_counterparty_360":
+        res = client.check_counterparty_360(args["inn"])
     elif name == "ecom_markirovka_check":
         res = client.check_markirovka(tnved=args.get("tnved"), q=args.get("q"))
     elif name == "construction_contractor_check":

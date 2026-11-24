@@ -86,7 +86,9 @@ test('MCP v0.2.0 health, auth rejection, 15 tools proxying and fail-closed 401/4
       u.includes('/data/ecom/') ||
       u.includes('/data/construction/') ||
       u.includes('/data/real-estate/') ||
-      u.includes('/data/market/')
+      u.includes('/data/market/') ||
+      u.includes('/data/ru/counterparty/') ||
+      u.endsWith('/data/quota')
     ) {
       return new Response(JSON.stringify({ ok: true, data: { count: 1, items: [] } }), {
         status: 200,
@@ -126,24 +128,24 @@ test('MCP v0.2.0 health, auth rejection, 15 tools proxying and fail-closed 401/4
     const health = await fetch(`${base}/health`);
     assert.equal(health.status, 200);
     const hJson = await health.json();
-    assert.equal(hJson.tools, 28);
-    assert.equal(hJson.version, '0.5.0');
-    assert.equal(TOOL_DEFINITIONS.length, 28);
+    assert.equal(hJson.tools, 30);
+    assert.equal(hJson.version, '0.6.0');
+    assert.equal(TOOL_DEFINITIONS.length, 30);
 
     const card = await fetch(`${base}/.well-known/mcp.json`);
     assert.equal(card.status, 200);
     const cardJson = await card.json();
-    assert.equal(cardJson.tools.length, 28);
+    assert.equal(cardJson.tools.length, 30);
 
     // 2. Unauthorized without valid nsr_ key
     const unauth = await rpc(null, { jsonrpc: '2.0', id: 1, method: 'tools/list' });
     assert.equal(unauth.status, 401);
 
-    // 3. tools/list returns 28 tools
+    // 3. tools/list returns 30 tools
     const listRes = await rpc(VALID_KEY, { jsonrpc: '2.0', id: 2, method: 'tools/list' });
     assert.equal(listRes.status, 200);
     const listJson = await listRes.json();
-    assert.equal(listJson.result.tools.length, 28);
+    assert.equal(listJson.result.tools.length, 30);
 
     // 4. Fake regex-valid key must FAIL on list_models (no hardcoded bypass!)
     const fakeRes = await rpc(FAKE_KEY, {
@@ -182,6 +184,8 @@ test('MCP v0.2.0 health, auth rejection, 15 tools proxying and fail-closed 401/4
       ['real_estate_mortgage_calc', { price: 10000000, down_payment: 2000000, years: 20 }],
       ['ru_market_salaries', { role: 'llm' }],
       ['ru_freelance_vs_api', { task: 'договор' }],
+      ['ru_counterparty_360', { inn: '7705552444' }],
+      ['get_data_quota', {}],
       ['get_balance', {}],
       ['compare_models', { models: ['gpt-6.1-sol', 'qwen3.8-max'], prompt: 'test' }],
     ];
@@ -204,6 +208,8 @@ test('MCP v0.2.0 health, auth rejection, 15 tools proxying and fail-closed 401/4
     assert.ok(seenTools.includes('list_models'));
     assert.ok(seenTools.includes('ru_market_salaries'));
     assert.ok(seenTools.includes('ru_freelance_vs_api'));
+    assert.ok(seenTools.includes('ru_counterparty_360'));
+    assert.ok(seenTools.includes('get_data_quota'));
   } finally {
     server.close();
   }

@@ -1,6 +1,6 @@
 # MCP-сервер и Python SDK Нейросети.ру (`@neuroseti/mcp`)
 
-Открытый MCP-сервер (`v0.5.0`, **28 инструментов**) и Python-библиотека (`neuroseti-data` без внешних зависимостей) для работы ИИ-агентов с российскими открытыми госреестрами, ИИ-Telegram и 33 LLM в рублях.
+Открытый MCP-сервер (`v0.6.0`, **30 инструментов**) и SDK для JavaScript/TypeScript и Python (`@neuroseti/mcp/sdk`, `neuroseti-data`) без внешних зависимостей для работы ИИ-агентов с российскими открытыми госреестрами, проверкой контрагента 360 по ИНН, ИИ-Telegram и 33 LLM в рублях.
 
 - Облачный MCP-сервер (Streamable HTTP): `https://mcp.neuroseti.ru/mcp`
 - Бесплатный ключ `nsr_...` (300 запросов/сутки без карты): https://neuroseti.ru/account

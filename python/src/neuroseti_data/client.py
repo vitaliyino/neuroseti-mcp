@@ -116,3 +116,9 @@ class NeurosetiDataClient:
 
     def get_freelance_vs_api(self, task: str | None = None) -> dict[str, Any]:
         return self._get("/market/freelance-vs-api", {"task": task})
+
+    def check_counterparty_360(self, inn: str) -> dict[str, Any]:
+        return self._get(f"/ru/counterparty/{urllib.parse.quote(inn.strip())}")
+
+    def get_data_quota(self) -> dict[str, Any]:
+        return self._get("/quota")

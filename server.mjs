@@ -33,7 +33,7 @@ import http from 'node:http';
 import readline from 'node:readline';
 
 const PROTOCOL_VERSION = '2025-03-26';
-const SERVER_VERSION = '0.5.0';
+const SERVER_VERSION = '0.6.0';
 const KEY_PATTERN = /^nsr_[0-9A-Za-z]{40}$/;
 
 const DEFAULT_API_BASE = (process.env.NEUROSETI_API_BASE || 'https://api.neuroseti.ru/v1').replace(/\/+$/, '');
@@ -376,6 +376,22 @@ export const TOOL_DEFINITIONS = [
         category: { type: 'string', description: 'Категория: text, code, analytics, support, design, audio' },
       },
     },
+  },
+  {
+    name: 'ru_counterparty_360',
+    description: 'Единая 360-проверка российского контрагента (ЮЛ или ИП) по ИНН в 1 запрос сразу по 8 реестрам: ФНС, СРО НОСТРОЙ и НОПРИЗ, РНП ФАС, Росздравнадзор, Роспатент, УК ЖКХ, Реестр ПО и ЕИСЖС.',
+    inputSchema: {
+      type: 'object',
+      required: ['inn'],
+      properties: {
+        inn: { type: 'string', description: '10- или 12-значный ИНН организации или ИП РФ' },
+      },
+    },
+  },
+  {
+    name: 'get_data_quota',
+    description: 'Проверка тарифа и остатка суточной квоты Data API по ключу nsr_... (запрос не списывается из лимита).',
+    inputSchema: { type: 'object', properties: {} },
   },
 ];
 
@@ -732,6 +748,23 @@ export async function handleRpcMessage(msg, { apiKey, apiBase = DEFAULT_API_BASE
       if (name === 'ru_freelance_vs_api') {
         const qs = buildQuery({ task: args.task, category: args.category });
         const text = await callUpstreamJson({ apiBase, apiKey, path: `/data/market/freelance-vs-api${qs}`, toolName: name, fetchImpl });
+        return { jsonrpc: '2.0', id, result: { content: [{ type: 'text', text }] } };
+      }
+
+      if (name === 'ru_counterparty_360') {
+        if (!args.inn) throw new Error('Укажите обязательный параметр inn.');
+        const text = await callUpstreamJson({
+          apiBase,
+          apiKey,
+          path: `/data/ru/counterparty/${encodeURIComponent(String(args.inn))}`,
+          toolName: name,
+          fetchImpl,
+        });
+        return { jsonrpc: '2.0', id, result: { content: [{ type: 'text', text }] } };
+      }
+
+      if (name === 'get_data_quota') {
+        const text = await callUpstreamJson({ apiBase, apiKey, path: '/data/quota', toolName: name, fetchImpl });
         return { jsonrpc: '2.0', id, result: { content: [{ type: 'text', text }] } };
       }
 

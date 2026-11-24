@@ -1,7 +1,7 @@
 {
   "name": "@neuroseti/mcp",
-  "version": "0.5.0",
-  "description": "Official MCP server for Neuroseti.ru: 28 tools for Russia (33 LLMs in RUB, AI Telegram search, FNS INN, CBR FX/penalties/BIC, OKVED-2, ICD-10, 35k+ GRLS drugs, Roszdravnadzor, Rospatent, Chestny ZNAK / TN VED, SRO NOSTROY/NOPRIZ, RF real estate & IT salaries).",
+  "version": "0.6.0",
+  "description": "Official MCP server & SDK for Neuroseti.ru: 30 tools for Russia (33 LLMs in RUB, 360 counterparty INN check across 8 RF registries, AI Telegram search, FNS INN, CBR FX/penalties/BIC, OKVED-2, ICD-10, 35k+ GRLS drugs with ZNVLP prices, Roszdravnadzor, Rospatent, Chestny ZNAK / TN VED, SRO NOSTROY/NOPRIZ, RF real estate & IT salaries).",
   "type": "module",
   "license": "MIT",
   "author": "Neuroseti.ru <vitaliyvino@gmail.com> (https://neuroseti.ru)",

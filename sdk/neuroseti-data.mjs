@@ -120,4 +120,12 @@ export class NeurosetiDataClient {
   getFreelanceVsApi(params) {
     return this._get('/market/freelance-vs-api', params);
   }
+
+  checkCounterparty360(inn) {
+    return this._get(`/ru/counterparty/${encodeURIComponent(String(inn).trim())}`);
+  }
+
+  getDataQuota() {
+    return this._get('/quota');
+  }
 }

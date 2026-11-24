@@ -45,4 +45,6 @@ export class NeurosetiDataClient {
   calcMortgage(params: { price: number; downPayment?: number; years?: number; rate?: number; mode?: 'annuity' | 'differentiated' }): Promise<ApiEnvelope>;
   getMarketSalaries(params?: { role?: string; category?: string }): Promise<ApiEnvelope>;
   getFreelanceVsApi(params?: { task?: string; category?: string }): Promise<ApiEnvelope>;
+  checkCounterparty360(inn: string): Promise<ApiEnvelope>;
+  getDataQuota(): Promise<ApiEnvelope>;
 }

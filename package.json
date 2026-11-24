@@ -8,10 +8,10 @@
   "homepage": "https://neuroseti.ru/mcp",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vitaliyvino/neuroseti-mcp.git"
+    "url": "https://github.com/vitaliyino/neuroseti-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/vitaliyvino/neuroseti-mcp/issues"
+    "url": "https://github.com/vitaliyino/neuroseti-mcp/issues"
   },
   "keywords": [
     "mcp",

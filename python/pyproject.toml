@@ -27,7 +27,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://neuroseti.ru/open-api"
 Documentation = "https://neuroseti.ru/llms-full.txt"
-Repository = "https://github.com/vitaliyvino/neuroseti-mcp"
+Repository = "https://github.com/vitaliyino/neuroseti-mcp"
 OpenAPI = "https://neuroseti.ru/openapi.json"
 
 [tool.setuptools.packages.find]

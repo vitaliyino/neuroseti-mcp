@@ -2,16 +2,9 @@
 
 Репозиторий `C:\Projects\neuroseti-mcp` не содержит секретов, ПДн и закрытого кода основного сайта `neuroseti.ru`. Его можно безопасно выкладывать в публичный GitHub и пакетные реестры.
 
-## Шаг 1. Создать публичный GitHub-репозиторий
+## Шаг 1. Публичный GitHub-репозиторий (уже опубликован)
 
-Создайте пустой публичный репозиторий `vitaliyvino/neuroseti-mcp` (без README/License) и добавьте темы (Topics):
-`mcp`, `mcp-server`, `model-context-protocol`, `russia`, `open-data`, `llm`, `fns`, `cbr`, `chestny-znak`, `langchain`, `cursor`.
-
-```powershell
-cd C:\Projects\neuroseti-mcp
-git remote add origin https://github.com/vitaliyvino/neuroseti-mcp.git
-git push -u origin main
-```
+Репозиторий `https://github.com/vitaliyino/neuroseti-mcp` создан и синхронизирован с `main`.
 
 ## Шаг 2. Опубликовать `@neuroseti/mcp` в npm
 
@@ -28,7 +21,7 @@ npm publish --access public
 Официальный реестр автоматически переиндексируется каталогами Cursor, VS Code, Smithery, Glama и PulseMCP.
 
 1. Установите `mcp-publisher` (https://github.com/modelcontextprotocol/registry).
-2. Пройдите DNS-подтверждение пространства имен `ru.neuroseti` (TXT-запись в Cloudflare) или используйте `io.github.vitaliyvino/neuroseti-mcp` через GitHub OAuth.
+2. Пройдите DNS-подтверждение пространства имен `ru.neuroseti` (TXT-запись в Cloudflare) или используйте `io.github.vitaliyino/neuroseti-mcp` через GitHub OAuth.
 3. Выполните:
 
 ```bash
@@ -38,7 +31,7 @@ mcp-publisher publish server.json
 
 ## Шаг 4. Добавить в каталоги MCP (5 минут)
 
-- Smithery (`https://smithery.ai`): подключить GitHub-репозиторий `vitaliyvino/neuroseti-mcp` (файл `smithery.yaml` уже готов).
+- Smithery (`https://smithery.ai`): подключить GitHub-репозиторий `vitaliyino/neuroseti-mcp` (файл `smithery.yaml` уже готов).
 - Glama (`https://glama.ai/mcp/servers`): добавить URL репозитория (`glama.json` и `Dockerfile` уже готовы).
 - PulseMCP (`https://www.pulsemcp.com/submit`): отправить URL репозитория и `https://mcp.neuroseti.ru/mcp`.
 - PR в `https://github.com/punkpeye/awesome-mcp-servers` (раздел Finance / Open Data).

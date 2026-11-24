@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "neuroseti-data"
-version = "0.6.0"
+version = "0.7.0"
 description = "Zero-dependency Python SDK & LLM tool adapters for Neuroseti.ru Open Data API (RF: FNS INN, CBR, OKVED-2, ICD-10, GRLS, Roszdravnadzor, Rospatent, Chestny ZNAK, SRO NOSTROY/NOPRIZ, RF real estate & IT salaries)."
 readme = "../README.md"
 license = { text = "MIT" }

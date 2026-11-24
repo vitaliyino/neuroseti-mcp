@@ -1,6 +1,6 @@
 # Neuroseti.ru MCP Server & Open Data SDK (`@neuroseti/mcp`)
 
-Official open-source **Model Context Protocol (MCP)** server (`v0.6.0`, **30 tools**) and zero-dependency **JavaScript/TypeScript + Python SDK** (`@neuroseti/mcp/sdk`, `neuroseti-data`) for Russian open government registries, 360-degree counterparty INN checks, AI Telegram analytics, and 33 LLMs billed in RUB.
+Official open-source **Model Context Protocol (MCP)** server (`v0.7.0`, **30 tools, 5 MCP Prompts, 3 MCP Resources**) and zero-dependency **JavaScript/TypeScript + Python SDK** (`@neuroseti/mcp/sdk`, `neuroseti-data`) for Russian open government registries, 360-degree & batch counterparty INN checks, AI Telegram analytics, and 33 LLMs billed in RUB.
 
 - Live Remote MCP (Streamable HTTP): `https://mcp.neuroseti.ru/mcp`
 - Free API Key (`300 requests/day`, no credit card): https://neuroseti.ru/account
@@ -56,6 +56,7 @@ import { NeurosetiDataClient } from '@neuroseti/mcp/sdk';
 const client = new NeurosetiDataClient({ apiKey: 'nsr_YOUR_KEY' });
 console.log(await client.checkMarkirovka({ q: 'футболка' }));
 console.log(await client.checkContractor('5047176993'));
+console.log(await client.checkCounterpartyBatch(['7705552444', '5047176993']));
 ```
 
 ### 4. Python SDK (OpenAI Agents / LangChain / Scripts)
@@ -70,8 +71,14 @@ from neuroseti_data import NeurosetiDataClient
 client = NeurosetiDataClient(api_key="nsr_YOUR_KEY")
 print(client.check_markirovka(q="футболка"))
 print(client.check_contractor("5047176993"))
+print(client.check_counterparty_batch(["7705552444", "5047176993"]))
 print(client.search_drugs(q="ибупрофен", znvlp=True))
 ```
+
+### 5. Drop-in Cursor Rule & Claude Code Plugin
+
+- **Cursor Rule:** copy [plugins/cursor-rules/neuroseti-rf-open-data.mdc](./plugins/cursor-rules/neuroseti-rf-open-data.mdc) into `.cursor/rules/` in your project so Cursor automatically routes RF INN, CBR, Chestny ZNAK, GRLS and SRO questions to live Neuroseti MCP tools.
+- **Claude Code Plugin:** manifest provided in [.claude-plugin/plugin.json](./.claude-plugin/plugin.json) (uses `NEUROSETI_API_KEY` env var).
 
 ## All 30 MCP Tools
 
@@ -84,6 +91,11 @@ print(client.search_drugs(q="ибупрофен", znvlp=True))
 | Healthcare & IP (4) | `med_drugs_search`, `med_license_check`, `med_icd10_search`, `ip_trademarks_search` | 35,987 active GRLS drugs, 23,966 Roszdravnadzor licenses, 15,038 ICD-10 codes, 30,278 Rospatent trademarks |
 | E-Com, Construction & Real Estate (5) | `ecom_markirovka_check`, `ecom_tnved_search`, `construction_contractor_check`, `real_estate_search`, `real_estate_mortgage_calc` | Chestny ZNAK waves 1-3 + TR TS matrix, live SRO NOSTROY/NOPRIZ + FNS + RNP, EISZS/GIS ZKH, CBR mortgage calc |
 | IT/AI Market & Discovery (4) | `ru_market_salaries`, `ru_freelance_vs_api`, `find_mcp_server`, `diagnose_llm_error` | RF IT/AI salary medians, freelance-vs-API ROI, 36 RF MCP servers, LLM error guides |
+
+## MCP Prompts (5) & Resources (3)
+
+- **Prompts:** `check_counterparty_rf`, `check_wb_ozon_product`, `audit_drug_znvlp`, `calc_debt_penalty_rf`, `pick_best_llm_rf`.
+- **Resources:** `neuroseti://stats` (live DB counts), `neuroseti://openapi` (OpenAPI 3.1 spec), `neuroseti://llms-full` (full technical reference).
 
 ## Local Development & Tests
 

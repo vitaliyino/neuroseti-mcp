@@ -8,4 +8,4 @@ __all__ = [
     "dispatch_openai_tool_call",
     "build_langchain_tools",
 ]
-__version__ = "0.6.0"
+__version__ = "0.7.0"

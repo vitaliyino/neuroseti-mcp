@@ -33,7 +33,7 @@ import http from 'node:http';
 import readline from 'node:readline';
 
 const PROTOCOL_VERSION = '2025-03-26';
-const SERVER_VERSION = '0.6.0';
+const SERVER_VERSION = '0.7.0';
 const KEY_PATTERN = /^nsr_[0-9A-Za-z]{40}$/;
 
 const DEFAULT_API_BASE = (process.env.NEUROSETI_API_BASE || 'https://api.neuroseti.ru/v1').replace(/\/+$/, '');
@@ -452,6 +452,144 @@ async function callUpstreamChat({ apiBase, apiKey, model, prompt, system, temper
   };
 }
 
+export const PROMPT_DEFINITIONS = [
+  {
+    name: 'check_counterparty_rf',
+    description: 'Комплексная проверка российского контрагента по ИНН (8 реестров + расшифровка ОКВЭД + итоговое заключение о рисках).',
+    arguments: [{ name: 'inn', description: '10- или 12-значный ИНН организации или ИП РФ', required: true }],
+  },
+  {
+    name: 'check_wb_ozon_product',
+    description: 'Чеклист вывода товара на Wildberries и Ozon: ТН ВЭД, маркировка Честный ЗНАК, сертификация ТР ТС и проверка товарного знака.',
+    arguments: [{ name: 'product', description: 'Название товара на русском (например, футболка хлопковая)', required: true }],
+  },
+  {
+    name: 'audit_drug_znvlp',
+    description: 'Проверка лекарства по ГРЛС Минздрава РФ, подбор аналогов по МНН и сравнение предельных цен ЖНВЛП.',
+    arguments: [{ name: 'drug_name', description: 'Торговое наименование или МНН препарата', required: true }],
+  },
+  {
+    name: 'calc_debt_penalty_rf',
+    description: 'Расчет процентов по ст. 395 ГК РФ / пени по ключевой ставке ЦБ с учетом рабочих дней РФ и черновиком претензии.',
+    arguments: [
+      { name: 'amount', description: 'Сумма долга в рублях', required: true },
+      { name: 'from', description: 'Дата начала просрочки YYYY-MM-DD', required: true },
+      { name: 'to', description: 'Дата окончания просрочки YYYY-MM-DD', required: true },
+    ],
+  },
+  {
+    name: 'pick_best_llm_rf',
+    description: 'Подбор лучшей LLM для задачи в РФ с таблицей цен в рублях (Эконом и Официальный каналы) и оценкой экономии против фриланса.',
+    arguments: [
+      { name: 'task', description: 'Тип задачи: code, text, design, analytics или support', required: true },
+      { name: 'budget', description: 'Бюджет: low, mid или high', required: false },
+    ],
+  },
+];
+
+export const RESOURCE_DEFINITIONS = [
+  {
+    uri: 'neuroseti://stats',
+    name: 'Live RF Open Data Stats',
+    description: 'Живые счетчики строк в открытых реестрах PostgreSQL Нейросети.ру (ФНС, ГРЛС, Роспатент, СРО, МКБ-10, Telegram).',
+    mimeType: 'application/json',
+  },
+  {
+    uri: 'neuroseti://openapi',
+    name: 'Neuroseti.ru OpenAPI 3.1 Spec',
+    description: 'Полная машиночитаемая OpenAPI 3.1 спецификация всех Data API маршрутов.',
+    mimeType: 'application/json',
+  },
+  {
+    uri: 'neuroseti://llms-full',
+    name: 'Neuroseti.ru Full LLM Reference',
+    description: 'Полный справочник всех 30 MCP-инструментов и REST-эндпоинтов для ИИ-агентов.',
+    mimeType: 'text/markdown',
+  },
+];
+
+function buildPromptMessages(name, args = {}) {
+  if (name === 'check_counterparty_rf') {
+    const inn = String(args.inn || '').trim() || '7705552444';
+    return {
+      description: `Проверка контрагента РФ по ИНН ${inn}`,
+      messages: [
+        {
+          role: 'user',
+          content: {
+            type: 'text',
+            text: `Проверь российского контрагента с ИНН ${inn}: 1) вызови ru_counterparty_360(inn="${inn}"), 2) если найден okved_main, расшифруй его через ru_okved_search, 3) выдай структурированное заключение: название, статус МСП и налоги, членство в СРО, РНП, лицензии, товарные знаки и итоговый уровень риска.`,
+          },
+        },
+      ],
+    };
+  }
+  if (name === 'check_wb_ozon_product') {
+    const product = String(args.product || '').trim() || 'футболка хлопковая';
+    return {
+      description: `Чеклист запуска товара «${product}» на WB/Ozon`,
+      messages: [
+        {
+          role: 'user',
+          content: {
+            type: 'text',
+            text: `Подготовь чеклист запуска товара «${product}» на WB и Ozon: вызови ecom_tnved_search(q="${product}"), ecom_markirovka_check(q="${product}") и при необходимости ip_trademarks_search. Укажи код ТН ВЭД, нужна ли маркировка Честный ЗНАК (волна и ПП РФ) и какой документ ТР ТС требуется.`,
+          },
+        },
+      ],
+    };
+  }
+  if (name === 'audit_drug_znvlp') {
+    const drug = String(args.drug_name || '').trim() || 'ибупрофен';
+    return {
+      description: `Аудит препарата «${drug}» по ГРЛС и ЖНВЛП`,
+      messages: [
+        {
+          role: 'user',
+          content: {
+            type: 'text',
+            text: `Найди препарат «${drug}» через med_drugs_search(q="${drug}"), затем подбери аналоги по его МНН (znvlp=true) и оформи таблицу со статусом ЖНВЛП и предельными ценами в рублях. Обязательно сохрани медицинский дисклеймер.`,
+          },
+        },
+      ],
+    };
+  }
+  if (name === 'calc_debt_penalty_rf') {
+    const amount = args.amount || '100000';
+    const from = args.from || '2026-06-01';
+    const to = args.to || '2026-08-31';
+    return {
+      description: `Расчет процентов по ст. 395 ГК РФ (${amount} руб.)`,
+      messages: [
+        {
+          role: 'user',
+          content: {
+            type: 'text',
+            text: `Рассчитай проценты по ст. 395 ГК РФ на сумму ${amount} руб. за период с ${from} по ${to} через ru_cbr_rate(mode="penalty", amount=${amount}, from="${from}", to="${to}", penalty_mode="art395"), проверь дату окончания по ru_workdays и оформи краткую таблицу расчета по периодам ключевой ставки ЦБ.`,
+          },
+        },
+      ],
+    };
+  }
+  if (name === 'pick_best_llm_rf') {
+    const task = args.task || 'code';
+    const budget = args.budget || 'mid';
+    return {
+      description: `Подбор LLM в РФ для задачи ${task}`,
+      messages: [
+        {
+          role: 'user',
+          content: {
+            type: 'text',
+            text: `Подбери оптимальную LLM в РФ для задачи "${task}" (бюджет "${budget}"): вызови kwork_benchmark_lookup(task="${task}", budget="${budget}"), list_models(category="llm") и ru_freelance_vs_api. Сравни цены в рублях по курсу ЦБ (Эконом и Официальный каналы) и оцени экономию.`,
+          },
+        },
+      ],
+    };
+  }
+  return null;
+}
+
 export async function handleRpcMessage(msg, { apiKey, apiBase = DEFAULT_API_BASE, fetchImpl = fetch }) {
   const { id, method, params } = msg;
   if (method === 'notifications/initialized') return null;
@@ -462,10 +600,48 @@ export async function handleRpcMessage(msg, { apiKey, apiBase = DEFAULT_API_BASE
       id,
       result: {
         protocolVersion: PROTOCOL_VERSION,
-        capabilities: { tools: {} },
+        capabilities: { tools: {}, prompts: {}, resources: {} },
         serverInfo: { name: 'neuroseti-mcp', version: SERVER_VERSION },
       },
     };
+  }
+
+  if (method === 'prompts/list') {
+    return { jsonrpc: '2.0', id, result: { prompts: PROMPT_DEFINITIONS } };
+  }
+
+  if (method === 'prompts/get') {
+    const promptObj = buildPromptMessages(params?.name, params?.arguments);
+    if (!promptObj) {
+      return { jsonrpc: '2.0', id, error: { code: -32602, message: `Unknown prompt: ${params?.name}` } };
+    }
+    return { jsonrpc: '2.0', id, result: promptObj };
+  }
+
+  if (method === 'resources/list') {
+    return { jsonrpc: '2.0', id, result: { resources: RESOURCE_DEFINITIONS } };
+  }
+
+  if (method === 'resources/read') {
+    const uri = String(params?.uri || '');
+    const origin = apiBase.replace(/\/api\/v1$/, '').replace(/\/v1$/, '');
+    const targetMap = {
+      'neuroseti://stats': { url: `${origin}/api/open-data/stats`, mimeType: 'application/json' },
+      'neuroseti://openapi': { url: `${origin}/openapi.json`, mimeType: 'application/json' },
+      'neuroseti://llms-full': { url: `${origin}/llms-full.txt`, mimeType: 'text/markdown' },
+    };
+    const target = targetMap[uri];
+    if (!target) {
+      return { jsonrpc: '2.0', id, error: { code: -32602, message: `Unknown resource URI: ${uri}` } };
+    }
+    try {
+      const res = await fetchImpl(target.url, { headers: { 'User-Agent': `neuroseti-mcp/${SERVER_VERSION}` } });
+      const text = await res.text();
+      if (!res.ok) throw new Error(`Resource HTTP ${res.status}`);
+      return { jsonrpc: '2.0', id, result: { contents: [{ uri, mimeType: target.mimeType, text }] } };
+    } catch (err) {
+      return { jsonrpc: '2.0', id, error: { code: -32000, message: String(err.message || err) } };
+    }
   }
 
   if (method === 'tools/list') {
@@ -797,6 +973,8 @@ export function createMcpHttpServer({ apiBase = DEFAULT_API_BASE, requireKeyForm
           service: 'neuroseti-mcp',
           version: SERVER_VERSION,
           tools: TOOL_DEFINITIONS.length,
+          prompts: PROMPT_DEFINITIONS.length,
+          resources: RESOURCE_DEFINITIONS.length,
           models: 33,
         }),
       );
@@ -822,6 +1000,8 @@ export function createMcpHttpServer({ apiBase = DEFAULT_API_BASE, requireKeyForm
           transport: { type: 'streamable-http', url: 'https://mcp.neuroseti.ru/mcp' },
           authentication: { type: 'bearer', signupUrl: 'https://neuroseti.ru/account' },
           tools: TOOL_DEFINITIONS.map((t) => ({ name: t.name, description: t.description })),
+          prompts: PROMPT_DEFINITIONS.map((p) => ({ name: p.name, description: p.description })),
+          resources: RESOURCE_DEFINITIONS.map((r) => ({ uri: r.uri, name: r.name, mimeType: r.mimeType })),
         }),
       );
       return;

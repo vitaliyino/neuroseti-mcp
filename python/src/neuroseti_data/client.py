@@ -48,10 +48,29 @@ class NeurosetiDataClient:
             url,
             headers={
                 "Authorization": f"Bearer {self.api_key}",
-                "User-Agent": "neuroseti-data-python/0.5.0",
+                "User-Agent": "neuroseti-data-python/0.7.0",
                 "Accept": "application/json",
             },
         )
+        return self._send(req)
+
+    def _post(self, path: str, payload: dict[str, Any]) -> dict[str, Any]:
+        url = f"{self.base_url}{path}"
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            url,
+            data=data,
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {self.api_key}",
+                "User-Agent": "neuroseti-data-python/0.7.0",
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+        )
+        return self._send(req)
+
+    def _send(self, req: urllib.request.Request) -> dict[str, Any]:
         try:
             with self._opener(req, timeout=self.timeout) as resp:
                 return json.loads(resp.read().decode("utf-8"))
@@ -119,6 +138,9 @@ class NeurosetiDataClient:
 
     def check_counterparty_360(self, inn: str) -> dict[str, Any]:
         return self._get(f"/ru/counterparty/{urllib.parse.quote(inn.strip())}")
+
+    def check_counterparty_batch(self, inns: list[str], live_sro: bool = False) -> dict[str, Any]:
+        return self._post("/ru/counterparty/batch", {"inns": inns, "live_sro": bool(live_sro)})
 
     def get_data_quota(self) -> dict[str, Any]:
         return self._get("/quota")

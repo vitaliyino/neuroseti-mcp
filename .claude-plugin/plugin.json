@@ -1,0 +1,21 @@
+{
+  "name": "neuroseti-rf-open-data",
+  "version": "0.7.0",
+  "description": "30 MCP tools, 5 MCP Prompts and 3 MCP Resources for Russian open government registries (FNS, CBR, GRLS/ZNVLP, Roszdravnadzor, Rospatent, Chestny ZNAK, SRO NOSTROY/NOPRIZ), AI Telegram Pulse, and 33 LLMs billed in RUB.",
+  "author": {
+    "name": "Neuroseti.ru",
+    "url": "https://neuroseti.ru/mcp"
+  },
+  "homepage": "https://neuroseti.ru/mcp",
+  "repository": "https://github.com/vitaliyino/neuroseti-mcp",
+  "license": "MIT",
+  "mcpServers": {
+    "neuroseti": {
+      "type": "http",
+      "url": "https://mcp.neuroseti.ru/mcp",
+      "headers": {
+        "Authorization": "Bearer ${NEUROSETI_API_KEY}"
+      }
+    }
+  }
+}

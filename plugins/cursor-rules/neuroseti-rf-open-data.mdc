@@ -1,0 +1,27 @@
+---
+description: Use Neuroseti.ru MCP tools for Russian government registries, counterparty INN checks, CBR rates/penalties, Chestny ZNAK, GRLS drugs, SRO NOSTROY/NOPRIZ, and RUB LLM pricing
+globs: ["**/*"]
+alwaysApply: false
+---
+
+# Neuroseti.ru RF Open Data & AI MCP Rule
+
+When the user asks about Russian legal entities, tax/finance calculations, marketplace compliance, healthcare registries, construction contractors, real estate, or RUB LLM pricing, prefer calling live tools from the `neuroseti` MCP server instead of guessing from training data:
+
+- Counterparty check by INN (10 or 12 digits): call `ru_counterparty_360` (checks 8 RF registries at once: FNS MSP/taxes, SRO NOSTROY/NOPRIZ, FAS RNP, Roszdravnadzor, Rospatent, GIS ZKH UK, Mintsifry RU Software, EISZS) or use prompt `check_counterparty_rf`.
+- CBR FX rates, key rate (2013-2026), or Art. 395 / 1/300 / 1/150 debt penalties: call `ru_cbr_rate` or prompt `calc_debt_penalty_rf`.
+- Russian workdays & production calendar (2020-2027): call `ru_workdays`.
+- Russian bank BIC lookup (CBR ED807): call `ru_bic_lookup`.
+- OKVED-2 classifier lookup: call `ru_okved_search`.
+- WB / Ozon product launch (TN VED EAEU, Chestny ZNAK waves 1-3, TR TS conformity document): call `ecom_tnved_search` + `ecom_markirovka_check` or prompt `check_wb_ozon_product`.
+- Medicines (GRLS, MNN analogs, ZNVLP max RUB prices), Roszdravnadzor licenses, ICD-10: call `med_drugs_search`, `med_license_check`, `med_icd10_search` or prompt `audit_drug_znvlp`. Always keep the medical disclaimer returned by the API.
+- Rospatent trademarks: call `ip_trademarks_search`.
+- Construction contractors & housing UK: call `construction_contractor_check`.
+- Real estate & CBR-linked mortgage calculation: call `real_estate_search`, `real_estate_mortgage_calc`.
+- RF IT/AI salaries, freelance-vs-API ROI, and RUB LLM routing: call `ru_market_salaries`, `ru_freelance_vs_api`, `list_models`, `kwork_benchmark_lookup`, or prompt `pick_best_llm_rf`.
+- Quota status without spending a request: call `get_data_quota`.
+
+Live machine-readable references exposed as MCP Resources:
+- `neuroseti://stats` (live row counts)
+- `neuroseti://openapi` (OpenAPI 3.1 spec)
+- `neuroseti://llms-full` (full endpoint & tool reference)

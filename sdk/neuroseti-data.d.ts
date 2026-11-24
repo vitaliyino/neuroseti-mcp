@@ -46,5 +46,6 @@ export class NeurosetiDataClient {
   getMarketSalaries(params?: { role?: string; category?: string }): Promise<ApiEnvelope>;
   getFreelanceVsApi(params?: { task?: string; category?: string }): Promise<ApiEnvelope>;
   checkCounterparty360(inn: string): Promise<ApiEnvelope>;
+  checkCounterpartyBatch(inns: string[], options?: { liveSro?: boolean }): Promise<ApiEnvelope>;
   getDataQuota(): Promise<ApiEnvelope>;
 }

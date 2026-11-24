@@ -5,7 +5,7 @@ import { createMcpHttpServer, TOOL_DEFINITIONS } from './server.mjs';
 const VALID_KEY = `nsr_${'A'.repeat(40)}`;
 const FAKE_KEY = `nsr_${'Z'.repeat(40)}`;
 
-test('MCP v0.2.0 health, auth rejection, 15 tools proxying and fail-closed 401/429', async () => {
+test('MCP v0.7.0 health, auth rejection, 30 tools, 5 prompts, 3 resources and fail-closed 401/429', async () => {
   const seenUrls = [];
   const seenTools = [];
   const mockFetch = async (url, init) => {
@@ -95,6 +95,12 @@ test('MCP v0.2.0 health, auth rejection, 15 tools proxying and fail-closed 401/4
         headers: { 'content-type': 'application/json' },
       });
     }
+    if (u.endsWith('/api/open-data/stats')) {
+      return new Response(JSON.stringify({ ok: true, data: { pg_live_rows_total: 485782 } }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    }
     if (u.endsWith('/balance')) {
       return new Response(JSON.stringify({ balance_kopecks: 125000, balance_rub: 1250, currency: 'RUB' }), {
         status: 200,
@@ -129,13 +135,17 @@ test('MCP v0.2.0 health, auth rejection, 15 tools proxying and fail-closed 401/4
     assert.equal(health.status, 200);
     const hJson = await health.json();
     assert.equal(hJson.tools, 30);
-    assert.equal(hJson.version, '0.6.0');
+    assert.equal(hJson.prompts, 5);
+    assert.equal(hJson.resources, 3);
+    assert.equal(hJson.version, '0.7.0');
     assert.equal(TOOL_DEFINITIONS.length, 30);
 
     const card = await fetch(`${base}/.well-known/mcp.json`);
     assert.equal(card.status, 200);
     const cardJson = await card.json();
     assert.equal(cardJson.tools.length, 30);
+    assert.equal(cardJson.prompts.length, 5);
+    assert.equal(cardJson.resources.length, 3);
 
     // 2. Unauthorized without valid nsr_ key
     const unauth = await rpc(null, { jsonrpc: '2.0', id: 1, method: 'tools/list' });
@@ -210,6 +220,54 @@ test('MCP v0.2.0 health, auth rejection, 15 tools proxying and fail-closed 401/4
     assert.ok(seenTools.includes('ru_freelance_vs_api'));
     assert.ok(seenTools.includes('ru_counterparty_360'));
     assert.ok(seenTools.includes('get_data_quota'));
+
+    // 6. MCP Prompts & Resources (v0.7.0)
+    const pList = await (await rpc(VALID_KEY, { jsonrpc: '2.0', id: 90, method: 'prompts/list' })).json();
+    assert.equal(pList.result.prompts.length, 5);
+
+    const pGet = await (
+      await rpc(VALID_KEY, {
+        jsonrpc: '2.0',
+        id: 91,
+        method: 'prompts/get',
+        params: { name: 'check_counterparty_rf', arguments: { inn: '7705552444' } },
+      })
+    ).json();
+    assert.match(pGet.result.messages[0].content.text, /7705552444/);
+
+    const rList = await (await rpc(VALID_KEY, { jsonrpc: '2.0', id: 92, method: 'resources/list' })).json();
+    assert.equal(rList.result.resources.length, 3);
+
+    const rRead = await (
+      await rpc(VALID_KEY, {
+        jsonrpc: '2.0',
+        id: 93,
+        method: 'resources/read',
+        params: { uri: 'neuroseti://stats' },
+      })
+    ).json();
+    assert.match(rRead.result.contents[0].text, /485782/);
+
+    // 7. Red inputs for unknown prompt & unknown resource -> JSON-RPC -32602
+    const badPrompt = await (
+      await rpc(VALID_KEY, {
+        jsonrpc: '2.0',
+        id: 94,
+        method: 'prompts/get',
+        params: { name: 'does_not_exist' },
+      })
+    ).json();
+    assert.equal(badPrompt.error.code, -32602);
+
+    const badRes = await (
+      await rpc(VALID_KEY, {
+        jsonrpc: '2.0',
+        id: 95,
+        method: 'resources/read',
+        params: { uri: 'neuroseti://unknown' },
+      })
+    ).json();
+    assert.equal(badRes.error.code, -32602);
   } finally {
     server.close();
   }

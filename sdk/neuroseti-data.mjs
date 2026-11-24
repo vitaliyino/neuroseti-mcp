@@ -37,9 +37,28 @@ export class NeurosetiDataClient {
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
         Accept: 'application/json',
-        'User-Agent': 'neuroseti-data-js/0.5.0',
+        'User-Agent': 'neuroseti-data-js/0.7.0',
       },
     });
+    return this._parseResponse(res);
+  }
+
+  async _post(path, body) {
+    const url = `${this.baseUrl}${path}`;
+    const res = await this.fetchImpl(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'neuroseti-data-js/0.7.0',
+      },
+      body: JSON.stringify(body),
+    });
+    return this._parseResponse(res);
+  }
+
+  async _parseResponse(res) {
     const text = await res.text();
     let parsed;
     try {
@@ -123,6 +142,10 @@ export class NeurosetiDataClient {
 
   checkCounterparty360(inn) {
     return this._get(`/ru/counterparty/${encodeURIComponent(String(inn).trim())}`);
+  }
+
+  checkCounterpartyBatch(inns, { liveSro = false } = {}) {
+    return this._post('/ru/counterparty/batch', { inns, live_sro: Boolean(liveSro) });
   }
 
   getDataQuota() {

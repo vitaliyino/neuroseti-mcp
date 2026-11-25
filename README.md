@@ -1,6 +1,6 @@
 # Neuroseti.ru MCP Server & Open Data SDK (`@neuroseti/mcp`)
 
-Official open-source **Model Context Protocol (MCP)** server (`v0.7.0`, **30 tools, 5 MCP Prompts, 3 MCP Resources**) and zero-dependency **JavaScript/TypeScript + Python SDK** (`@neuroseti/mcp/sdk`, `neuroseti-data`) for Russian open government registries, 360-degree & batch counterparty INN checks, AI Telegram analytics, and 33 LLMs billed in RUB.
+Official open-source **Model Context Protocol (MCP)** server (`v0.8.0`, **31 tools, 5 MCP Prompts, 3 MCP Resources**) and zero-dependency **JavaScript/TypeScript + Python SDK** (`@neuroseti/mcp/sdk`, `neuroseti-data`) for Russian open government registries, 360-degree & batch counterparty INN checks, AI Telegram analytics, and 33 LLMs billed in RUB.
 
 - Live Remote MCP (Streamable HTTP): `https://mcp.neuroseti.ru/mcp`
 - Free API Key (`300 requests/day`, no credit card): https://neuroseti.ru/account
@@ -80,12 +80,12 @@ print(client.search_drugs(q="ибупрофен", znvlp=True))
 - **Cursor Rule:** copy [plugins/cursor-rules/neuroseti-rf-open-data.mdc](./plugins/cursor-rules/neuroseti-rf-open-data.mdc) into `.cursor/rules/` in your project so Cursor automatically routes RF INN, CBR, Chestny ZNAK, GRLS and SRO questions to live Neuroseti MCP tools.
 - **Claude Code Plugin:** manifest provided in [.claude-plugin/plugin.json](./.claude-plugin/plugin.json) (uses `NEUROSETI_API_KEY` env var).
 
-## All 30 MCP Tools
+## All 31 MCP Tools
 
 | Category | Tools | Live Data Coverage |
 | :--- | :--- | :--- |
 | LLM Routing & Balance (6) | `list_models`, `get_model_info`, `ask_model`, `compare_models`, `get_balance`, `kwork_benchmark_lookup` | 33 LLMs + 18 media models, live CBR RUB prices, economy & enterprise channels |
-| Counterparty 360 & Quota (2) | `ru_counterparty_360`, `get_data_quota` | Single-call 8-registry INN check (FNS, SRO, Rospatent, Roszdravnadzor, RNP, UK, Software, EISZS) + zero-cost quota check |
+| Counterparty 360 & Quota (3) | `ru_counterparty_360`, `ru_counterparty_batch`, `get_data_quota` | Single & batch (1-10 INNs) 8-registry check (FNS, SRO, Rospatent, Roszdravnadzor, RNP, UK, Software, EISZS) + zero-cost quota check |
 | AI Telegram Pulse (3) | `tg_search_posts`, `tg_get_trends`, `tg_ad_radar` | 43,965+ posts across 40 Russian AI/IT channels, `erid` ad filtering, 24h ad watch |
 | Business & Finance RF (6) | `ru_cbr_rate`, `ru_workdays`, `ru_bic_lookup`, `ru_okved_search`, `ru_company_by_inn`, `ru_software_registry_search` | CBR FX/key-rate/Art.395 penalty, 1,359 BICs, 2020-2027 calendar, 2,770 OKVED-2, 100,000+ FNS INN cards |
 | Healthcare & IP (4) | `med_drugs_search`, `med_license_check`, `med_icd10_search`, `ip_trademarks_search` | 35,987 active GRLS drugs, 23,966 Roszdravnadzor licenses, 15,038 ICD-10 codes, 30,278 Rospatent trademarks |

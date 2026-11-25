@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "ru.neuroseti/mcp",
   "title": "Neuroseti.ru MCP (RF Open Data + 33 LLMs)",
-  "description": "30 MCP tools, 5 MCP Prompts & 3 MCP Resources for Russian developers and AI agents: 33 LLMs in RUB, 360 counterparty INN check across 8 RF registries, AI Telegram search (44k+ posts), FNS INN, CBR FX/penalties/BIC, OKVED-2, ICD-10, 35k+ GRLS drugs with ZNVLP prices, Roszdravnadzor, Rospatent, Chestny ZNAK/TN VED, SRO NOSTROY/NOPRIZ, RF mortgage & IT salary index.",
-  "version": "0.7.0",
+  "description": "31 MCP tools, 5 MCP Prompts & 3 MCP Resources for Russian developers and AI agents: 33 LLMs in RUB, single & batch 360 counterparty INN checks across 8 RF registries, AI Telegram search (44k+ posts), FNS INN, CBR FX/penalties/BIC, OKVED-2, ICD-10, 35k+ GRLS drugs with ZNVLP prices, Roszdravnadzor, Rospatent, Chestny ZNAK/TN VED, SRO NOSTROY/NOPRIZ, RF mortgage & IT salary index.",
+  "version": "0.8.0",
   "websiteUrl": "https://neuroseti.ru/mcp",
   "repository": {
     "url": "https://github.com/vitaliyino/neuroseti-mcp",
@@ -28,7 +28,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@neuroseti/mcp",
-      "version": "0.7.0",
+      "version": "0.8.0",
       "transport": {
         "type": "stdio"
       },

@@ -33,7 +33,7 @@ import http from 'node:http';
 import readline from 'node:readline';
 
 const PROTOCOL_VERSION = '2025-03-26';
-const SERVER_VERSION = '0.7.0';
+const SERVER_VERSION = '0.8.0';
 const KEY_PATTERN = /^nsr_[0-9A-Za-z]{40}$/;
 
 const DEFAULT_API_BASE = (process.env.NEUROSETI_API_BASE || 'https://api.neuroseti.ru/v1').replace(/\/+$/, '');
@@ -389,6 +389,28 @@ export const TOOL_DEFINITIONS = [
     },
   },
   {
+    name: 'ru_counterparty_batch',
+    description:
+      'Пакетная 360-проверка от 1 до 10 российских контрагентов (ИНН) за 1 запрос сразу по 8 реестрам РФ (ФНС, СРО НОСТРОЙ/НОПРИЗ, РНП ФАС, Росздравнадзор, Роспатент, УК ЖКХ, Реестр ПО, ЕИСЖС).',
+    inputSchema: {
+      type: 'object',
+      required: ['inns'],
+      properties: {
+        inns: {
+          type: 'array',
+          items: { type: 'string' },
+          minItems: 1,
+          maxItems: 10,
+          description: 'Список от 1 до 10 уникальных ИНН (10 или 12 цифр)',
+        },
+        live_sro: {
+          type: 'boolean',
+          description: 'Делать ли дополнительный живой запрос к API СРО НОСТРОЙ/НОПРИЗ (по умолчанию false, используется быстрый кеш PG)',
+        },
+      },
+    },
+  },
+  {
     name: 'get_data_quota',
     description: 'Проверка тарифа и остатка суточной квоты Data API по ключу nsr_... (запрос не списывается из лимита).',
     inputSchema: { type: 'object', properties: {} },
@@ -413,6 +435,25 @@ async function fetchUpstreamJson({ apiBase, apiKey, path, toolName = '', fetchIm
       'X-Neuroseti-Client': `mcp-v${SERVER_VERSION}`,
       ...(toolName ? { 'X-Mcp-Tool': toolName } : {}),
     },
+  });
+  const text = await res.text();
+  if (!res.ok) {
+    throw new Error(`API HTTP ${res.status}: ${text.slice(0, 320)}`);
+  }
+  return text;
+}
+
+async function postUpstreamJson({ apiBase, apiKey, path, body, toolName = '', fetchImpl = fetch }) {
+  if (!apiKey) throw new Error('Не передан ключ nsr_... в Authorization: Bearer.');
+  const res = await fetchImpl(`${apiBase}${path}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'X-Neuroseti-Client': `mcp-v${SERVER_VERSION}`,
+      ...(toolName ? { 'X-Mcp-Tool': toolName } : {}),
+    },
+    body: JSON.stringify(body),
   });
   const text = await res.text();
   if (!res.ok) {
@@ -933,6 +974,22 @@ export async function handleRpcMessage(msg, { apiKey, apiBase = DEFAULT_API_BASE
           apiBase,
           apiKey,
           path: `/data/ru/counterparty/${encodeURIComponent(String(args.inn))}`,
+          toolName: name,
+          fetchImpl,
+        });
+        return { jsonrpc: '2.0', id, result: { content: [{ type: 'text', text }] } };
+      }
+
+      if (name === 'ru_counterparty_batch') {
+        const inns = Array.isArray(args.inns) ? args.inns.map((x) => String(x || '').trim()).filter(Boolean) : [];
+        if (inns.length === 0 || inns.length > 10) {
+          throw new Error('Передайте массив inns от 1 до 10 ИНН РФ.');
+        }
+        const text = await postUpstreamJson({
+          apiBase,
+          apiKey,
+          path: '/data/ru/counterparty/batch',
+          body: { inns, live_sro: Boolean(args.live_sro) },
           toolName: name,
           fetchImpl,
         });

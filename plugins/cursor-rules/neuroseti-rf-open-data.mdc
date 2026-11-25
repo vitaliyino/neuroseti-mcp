@@ -8,7 +8,7 @@ alwaysApply: false
 
 When the user asks about Russian legal entities, tax/finance calculations, marketplace compliance, healthcare registries, construction contractors, real estate, or RUB LLM pricing, prefer calling live tools from the `neuroseti` MCP server instead of guessing from training data:
 
-- Counterparty check by INN (10 or 12 digits): call `ru_counterparty_360` (checks 8 RF registries at once: FNS MSP/taxes, SRO NOSTROY/NOPRIZ, FAS RNP, Roszdravnadzor, Rospatent, GIS ZKH UK, Mintsifry RU Software, EISZS) or use prompt `check_counterparty_rf`.
+- Counterparty check by INN (10 or 12 digits): call `ru_counterparty_360` for 1 INN or `ru_counterparty_batch` for up to 10 INNs at once (checks 8 RF registries: FNS MSP/taxes, SRO NOSTROY/NOPRIZ, FAS RNP, Roszdravnadzor, Rospatent, GIS ZKH UK, Mintsifry RU Software, EISZS), or use prompt `check_counterparty_rf`.
 - CBR FX rates, key rate (2013-2026), or Art. 395 / 1/300 / 1/150 debt penalties: call `ru_cbr_rate` or prompt `calc_debt_penalty_rf`.
 - Russian workdays & production calendar (2020-2027): call `ru_workdays`.
 - Russian bank BIC lookup (CBR ED807): call `ru_bic_lookup`.

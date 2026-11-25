@@ -1,8 +1,8 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "ru.neuroseti/mcp",
   "title": "Neuroseti.ru MCP (RF Open Data + 33 LLMs)",
-  "description": "31 MCP tools, 5 MCP Prompts & 3 MCP Resources for Russian developers and AI agents: 33 LLMs in RUB, single & batch 360 counterparty INN checks across 8 RF registries, AI Telegram search (44k+ posts), FNS INN, CBR FX/penalties/BIC, OKVED-2, ICD-10, 35k+ GRLS drugs with ZNVLP prices, Roszdravnadzor, Rospatent, Chestny ZNAK/TN VED, SRO NOSTROY/NOPRIZ, RF mortgage & IT salary index.",
+  "description": "31 MCP tools for Russia: 33 LLMs in RUB, 8-registry INN check, FNS, CBR, GRLS/ZNVLP, SRO & E-Com",
   "version": "0.8.0",
   "websiteUrl": "https://neuroseti.ru/mcp",
   "repository": {
@@ -17,25 +17,6 @@
         {
           "name": "Authorization",
           "description": "Bearer nsr_... API key from https://neuroseti.ru/account (300 free requests/day)",
-          "isRequired": true,
-          "isSecret": true
-        }
-      ]
-    }
-  ],
-  "packages": [
-    {
-      "registryType": "npm",
-      "registryBaseUrl": "https://registry.npmjs.org",
-      "identifier": "@neuroseti/mcp",
-      "version": "0.8.0",
-      "transport": {
-        "type": "stdio"
-      },
-      "environmentVariables": [
-        {
-          "name": "NEUROSETI_API_KEY",
-          "description": "API key nsr_... from https://neuroseti.ru/account (300 free requests/day)",
           "isRequired": true,
           "isSecret": true
         }

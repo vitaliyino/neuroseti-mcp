@@ -1,5 +1,9 @@
 # Neuroseti.ru MCP Server & Open Data SDK (`neuroseti-mcp`)
 
+[![Neuroseti.ru MCP server](https://glama.ai/mcp/servers/vitaliyino/neuroseti-mcp/badges/score.svg)](https://glama.ai/mcp/servers/vitaliyino/neuroseti-mcp)
+[![PyPI version](https://img.shields.io/pypi/v/neuroseti-data.svg)](https://pypi.org/project/neuroseti-data/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
 Official open-source **Model Context Protocol (MCP)** server (`v0.8.1`, **31 tools, 5 MCP Prompts, 3 MCP Resources**) and zero-dependency **JavaScript/TypeScript + Python SDK** (`neuroseti-mcp/sdk`, `neuroseti-data`) for Russian open government registries, 360-degree & batch counterparty INN checks, AI Telegram analytics, and 33 LLMs billed in RUB.
 
 - Live Remote MCP (Streamable HTTP): `https://mcp.neuroseti.ru/mcp`

@@ -1,6 +1,6 @@
-# Neuroseti.ru MCP Server & Open Data SDK (`@neuroseti/mcp`)
+# Neuroseti.ru MCP Server & Open Data SDK (`neuroseti-mcp`)
 
-Official open-source **Model Context Protocol (MCP)** server (`v0.8.0`, **31 tools, 5 MCP Prompts, 3 MCP Resources**) and zero-dependency **JavaScript/TypeScript + Python SDK** (`@neuroseti/mcp/sdk`, `neuroseti-data`) for Russian open government registries, 360-degree & batch counterparty INN checks, AI Telegram analytics, and 33 LLMs billed in RUB.
+Official open-source **Model Context Protocol (MCP)** server (`v0.8.1`, **31 tools, 5 MCP Prompts, 3 MCP Resources**) and zero-dependency **JavaScript/TypeScript + Python SDK** (`neuroseti-mcp/sdk`, `neuroseti-data`) for Russian open government registries, 360-degree & batch counterparty INN checks, AI Telegram analytics, and 33 LLMs billed in RUB.
 
 - Live Remote MCP (Streamable HTTP): `https://mcp.neuroseti.ru/mcp`
 - Free API Key (`300 requests/day`, no credit card): https://neuroseti.ru/account
@@ -39,7 +39,7 @@ claude mcp add --transport http neuroseti https://mcp.neuroseti.ru/mcp --header 
   "mcpServers": {
     "neuroseti": {
       "command": "npx",
-      "args": ["-y", "@neuroseti/mcp"],
+      "args": ["-y", "neuroseti-mcp"],
       "env": {
         "NEUROSETI_API_KEY": "nsr_YOUR_KEY"
       }
@@ -51,7 +51,7 @@ claude mcp add --transport http neuroseti https://mcp.neuroseti.ru/mcp --header 
 ### 3. JavaScript / TypeScript SDK (Zero dependencies)
 
 ```js
-import { NeurosetiDataClient } from '@neuroseti/mcp/sdk';
+import { NeurosetiDataClient } from 'neuroseti-mcp/sdk';
 
 const client = new NeurosetiDataClient({ apiKey: 'nsr_YOUR_KEY' });
 console.log(await client.checkMarkirovka({ q: 'футболка' }));

@@ -60,4 +60,4 @@ jobs:
           fi
           python -m pip install --upgrade build twine
           python -m build python
-          python -m twine upload python/dist/*
+          python -m twine upload --skip-existing python/dist/*

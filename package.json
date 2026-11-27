@@ -1,8 +1,8 @@
 {
   "name": "neuroseti-mcp",
   "mcpName": "ru.neuroseti/mcp",
-  "version": "0.8.1",
-  "description": "Official MCP server & SDK for Neuroseti.ru: 31 tools, 5 MCP Prompts & 3 MCP Resources for Russia (33 LLMs in RUB, single & batch 360 counterparty INN checks across 8 RF registries, AI Telegram search, FNS INN, CBR FX/penalties/BIC, OKVED-2, ICD-10, 35k+ GRLS drugs with ZNVLP prices, Roszdravnadzor, Rospatent, Chestny ZNAK / TN VED, SRO NOSTROY/NOPRIZ, RF real estate & IT salaries).",
+  "version": "0.9.0",
+  "description": "Official MCP server & SDK for Neuroseti.ru: 31 tools, 5 MCP Prompts & 3 MCP Resources for Russia (60 LLMs + 34 media models at one unified RUB price, single & batch 360 counterparty INN checks across 8 RF registries, AI Telegram search, FNS INN, CBR FX/penalties/BIC, OKVED-2, ICD-10, 35k+ GRLS drugs with ZNVLP prices, Roszdravnadzor, Rospatent, Chestny ZNAK / TN VED, SRO NOSTROY/NOPRIZ, RF real estate & IT salaries).",
   "type": "module",
   "license": "MIT",
   "author": "Neuroseti.ru <vitaliyvino@gmail.com> (https://neuroseti.ru)",

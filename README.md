@@ -4,7 +4,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/neuroseti-data.svg)](https://pypi.org/project/neuroseti-data/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-Official open-source **Model Context Protocol (MCP)** server (`v0.8.1`, **31 tools, 5 MCP Prompts, 3 MCP Resources**) and zero-dependency **JavaScript/TypeScript + Python SDK** (`neuroseti-mcp/sdk`, `neuroseti-data`) for Russian open government registries, 360-degree & batch counterparty INN checks, AI Telegram analytics, and 33 LLMs billed in RUB.
+Official open-source **Model Context Protocol (MCP)** server (`v0.9.0`, **31 tools, 5 MCP Prompts, 3 MCP Resources**) and zero-dependency **JavaScript/TypeScript + Python SDK** (`neuroseti-mcp/sdk`, `neuroseti-data`) for Russian open government registries, 360-degree & batch counterparty INN checks, AI Telegram analytics, and 60 LLMs + 34 media models (94 models) billed at one unified RUB price.
 
 - Live Remote MCP (Streamable HTTP): `https://mcp.neuroseti.ru/mcp`
 - Free API Key (`300 requests/day`, no credit card): https://neuroseti.ru/account

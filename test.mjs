@@ -137,7 +137,10 @@ test('MCP v0.8.0 health, auth rejection, 31 tools, 5 prompts, 3 resources and fa
     assert.equal(hJson.tools, 31);
     assert.equal(hJson.prompts, 5);
     assert.equal(hJson.resources, 3);
-    assert.equal(hJson.version, '0.8.0');
+    assert.equal(hJson.version, '0.9.0');
+    assert.equal(hJson.models, 94);
+    assert.equal(hJson.llm_models, 60);
+    assert.equal(hJson.media_models, 34);
     assert.equal(TOOL_DEFINITIONS.length, 31);
 
     const card = await fetch(`${base}/.well-known/mcp.json`);

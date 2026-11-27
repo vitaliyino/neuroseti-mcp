@@ -1,14 +1,32 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "ru.neuroseti/mcp",
-  "title": "Neuroseti.ru MCP (RF Open Data + 33 LLMs)",
-  "description": "31 MCP tools for Russia: 33 LLMs in RUB, 8-registry INN check, FNS, CBR, GRLS/ZNVLP, SRO & E-Com",
-  "version": "0.8.0",
+  "title": "Neuroseti.ru MCP (RF Open Data + 94 AI Models)",
+  "description": "31 MCP tools for Russia: 60 LLMs + 34 media models at one RUB price, 8-registry INN check, FNS, CBR, GRLS/ZNVLP, SRO & E-Com",
+  "version": "0.9.0",
   "websiteUrl": "https://neuroseti.ru/mcp",
   "repository": {
     "url": "https://github.com/vitaliyino/neuroseti-mcp",
     "source": "github"
   },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "neuroseti-mcp",
+      "version": "0.9.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "NEUROSETI_API_KEY",
+          "description": "API key nsr_... from https://neuroseti.ru/account (300 free requests/day)",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
   "remotes": [
     {
       "type": "streamable-http",

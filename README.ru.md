@@ -2,7 +2,7 @@
 
 [![Neuroseti.ru MCP server](https://glama.ai/mcp/servers/vitaliyino/neuroseti-mcp/badges/score.svg)](https://glama.ai/mcp/servers/vitaliyino/neuroseti-mcp)
 
-Открытый MCP-сервер (`v0.8.1`, **31 инструмент, 5 Prompts, 3 Resources**) и SDK для JavaScript/TypeScript и Python (`neuroseti-mcp/sdk`, `neuroseti-data`) без внешних зависимостей для работы ИИ-агентов с российскими открытыми госреестрами, проверкой контрагента 360 и пакетной проверкой по ИНН, ИИ-Telegram и 33 LLM в рублях.
+Открытый MCP-сервер (`v0.9.0`, **31 инструмент, 5 Prompts, 3 Resources**) и SDK для JavaScript/TypeScript и Python (`neuroseti-mcp/sdk`, `neuroseti-data`) без внешних зависимостей для работы ИИ-агентов с российскими открытыми госреестрами, проверкой контрагента 360 и пакетной проверкой по ИНН, ИИ-Telegram и 94 моделями (60 LLM + 34 медиа) по единой рублевой цене.
 
 - Облачный MCP-сервер (Streamable HTTP): `https://mcp.neuroseti.ru/mcp`
 - Бесплатный ключ `nsr_...` (300 запросов/сутки без карты): https://neuroseti.ru/account
@@ -58,7 +58,7 @@ print(client.get_market_salaries(role="llm"))
 
 ## Что входит в 31 инструмент, 5 Prompts и 3 Resources
 
-- 33 LLM и 18 медиа-моделей с живыми ценами в рублях по курсу ЦБ (`list_models`, `ask_model`, `compare_models`).
+- 60 LLM и 34 медиа-модели (94 модели) с единой рублевой ценой по курсу ЦБ (`list_models`, `ask_model`, `compare_models`).
 - Контрагент 360 и квота: проверка 1 ИНН по 8 реестрам РФ (`ru_counterparty_360`), пакетная проверка до 10 ИНН за 1 вызов (`ru_counterparty_batch` / `POST /v1/data/ru/counterparty/batch`) и остаток квоты без списания (`get_data_quota`).
 - Поиск и тренды по 44 016+ постам ИИ-Telegram без рекламы `erid` (`tg_search_posts`, `tg_get_trends`, `tg_ad_radar`).
 - Бизнес и финансы РФ: курсы/ключевая ставка ЦБ, пени ст. 395 ГК, 1 359 БИК, календарь РФ 2020-2027, 2 770 ОКВЭД-2, 307 000+ карточек ФНС по ИНН.

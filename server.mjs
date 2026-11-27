@@ -33,7 +33,7 @@ import http from 'node:http';
 import readline from 'node:readline';
 
 const PROTOCOL_VERSION = '2025-03-26';
-const SERVER_VERSION = '0.8.0';
+const SERVER_VERSION = '0.9.0';
 const KEY_PATTERN = /^nsr_[0-9A-Za-z]{40}$/;
 
 const DEFAULT_API_BASE = (process.env.NEUROSETI_API_BASE || 'https://api.neuroseti.ru/v1').replace(/\/+$/, '');
@@ -42,7 +42,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: 'list_models',
     description:
-      'Живой реестр 60+ LLM и медиа-моделей для РФ: актуальные цены в рублях по курсу ЦБ, каналы Эконом и Официальный, Prompt Cache и статус доступности.',
+      'Живой реестр 94 моделей (60 LLM + 34 медиа) для РФ: единая цена в рублях по курсу ЦБ, Prompt Cache, контекст и статус доступности.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -50,14 +50,13 @@ export const TOOL_DEFINITIONS = [
         vendor: { type: 'string', description: 'Фильтр по провайдеру (OpenAI, Anthropic, Google, DeepSeek, Qwen, Яндекс и др.)' },
         routed_only: { type: 'boolean', description: 'Только модели, доступные через единый ключ Нейросети.ру' },
         max_input_rub: { type: 'number', description: 'Максимальная цена входа (руб./1M токенов или за 1 юнит)' },
-        channel: { type: 'string', enum: ['enterprise', 'economy'], description: 'Канал тарификации для фильтрации цены' },
         q: { type: 'string', description: 'Поиск по названию или назначению модели' },
       },
     },
   },
   {
     name: 'get_model_info',
-    description: 'Возвращает полную карточку модели по ID: цены в обоих каналах, контекст, Prompt Cache, longContext и статус в РФ.',
+    description: 'Возвращает полную карточку модели по ID: единая цена в рублях, контекст, Prompt Cache, longContext и статус в РФ.',
     inputSchema: {
       type: 'object',
       required: ['id'],
@@ -68,12 +67,12 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: 'ask_model',
-    description: 'Отправляет запрос в любую из 33 LLM через единый API Нейросети.ру (поддерживает префикс eco/ для эконом-канала).',
+    description: 'Отправляет запрос в любую из 60 LLM через единый API Нейросети.ру по единой рублевой цене.',
     inputSchema: {
       type: 'object',
       required: ['model', 'prompt'],
       properties: {
-        model: { type: 'string', description: 'ID модели, напр. gpt-6.2-sol, eco/gpt-6.2-sol, claude-fable-5-2, gemini-4-carbon' },
+        model: { type: 'string', description: 'ID модели, напр. gpt-6.2-sol, claude-fable-5-2, gemini-4-carbon, deepseek-v4-pro' },
         prompt: { type: 'string', description: 'Текст запроса' },
         system: { type: 'string', description: 'Необязательный системный промпт' },
         temperature: { type: 'number', description: 'Температура (0..1)' },
@@ -622,7 +621,7 @@ function buildPromptMessages(name, args = {}) {
           role: 'user',
           content: {
             type: 'text',
-            text: `Подбери оптимальную LLM в РФ для задачи "${task}" (бюджет "${budget}"): вызови kwork_benchmark_lookup(task="${task}", budget="${budget}"), list_models(category="llm") и ru_freelance_vs_api. Сравни цены в рублях по курсу ЦБ (Эконом и Официальный каналы) и оцени экономию.`,
+            text: `Подбери оптимальную LLM в РФ для задачи "${task}" (бюджет "${budget}"): вызови kwork_benchmark_lookup(task="${task}", budget="${budget}"), list_models(category="llm") и ru_freelance_vs_api. Сравни единые цены в рублях по курсу ЦБ и оцени экономию.`,
           },
         },
       ],
@@ -1032,7 +1031,9 @@ export function createMcpHttpServer({ apiBase = DEFAULT_API_BASE, requireKeyForm
           tools: TOOL_DEFINITIONS.length,
           prompts: PROMPT_DEFINITIONS.length,
           resources: RESOURCE_DEFINITIONS.length,
-          models: 33,
+          models: 94,
+          llm_models: 60,
+          media_models: 34,
         }),
       );
       return;
